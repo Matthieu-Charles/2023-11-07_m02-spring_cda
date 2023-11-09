@@ -72,6 +72,7 @@ public class Person {
                 ", age=" + age +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
+                ", animals=" + animals +
                 '}';
     }
 }

@@ -39,7 +39,7 @@ public class AnimalsApplication05 implements CommandLineRunner {
         List<Person> personListAgeMinAndMax = this.personRepository.findAllAgeBetweenMinAndMax(20,27);
         System.out.println(personListAgeMinAndMax);
 
-        List<Person> p = this.personRepository.findByOwnedAnimal(this.animalRepository.findById(2).get());
+        List<Person> p = this.personRepository.findOwnerByAnimal(this.animalRepository.findById(2).get());
         System.out.println(p);
 
         Integer nbrF = this.animalRepository.findNumberBySex("F");

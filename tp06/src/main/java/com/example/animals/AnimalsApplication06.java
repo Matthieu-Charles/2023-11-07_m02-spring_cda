@@ -8,7 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AnimalsApplication06 implements CommandLineRunner {
+public class AnimalsApplication06 {
 
     PersonRepository personRepository;
     AnimalRepository animalRepository;
@@ -23,13 +23,12 @@ public class AnimalsApplication06 implements CommandLineRunner {
         SpringApplication.run(AnimalsApplication06.class, args);
     }
 
-    @Override
     public void run(String... args) throws Exception {
 
-        Integer suppression= this.personRepository.deleteAllNotOwningAnimal();
+        Integer suppression= this.personRepository.deletePersonsWithoutAnimal();
         System.out.println(suppression);
 
-        Integer personCreated = this.personRepository.createEntities(2);
+        Integer personCreated = this.personRepository.insertRandomPerson(2);
         System.out.println(personCreated);
 
     }

@@ -27,7 +27,51 @@ public class Animal {
     @Override
     public String toString() {
         return "Animal{" +
+                "id=" + id +
+                ", color='" + color + '\'' +
                 ", name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                ", species=" + species +
                 '}';
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Set<Person> getPersons() {
+        return persons;
+    }
+
+    public void setPersons(Set<Person> persons) {
+        this.persons = persons;
+    }
+
+    public Species getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(Species species) {
+        this.species = species;
     }
 }

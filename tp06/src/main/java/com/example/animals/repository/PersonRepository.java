@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface PersonRepository extends JpaRepository<Person, Integer>, PersonRepositoryCustom {
     @Query("select p from Person p where p.age between :min and :max")
-    List<Person> findAllAgeBetweenMinAndMax(Integer min, Integer max);
+    List<Person> findPersonAgeBetween(Integer min, Integer max);
     @Query("select p from Person p where :animal MEMBER OF p.animals")
-    List<Person> findByOwnedAnimal(Animal animal);
+    List<Person> findOwnerByAnimal(Animal animal);
+    List<Person> findByAgeGreaterThanEqual(Integer age);
 }

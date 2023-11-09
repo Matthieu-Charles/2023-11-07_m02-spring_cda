@@ -16,12 +16,12 @@ public class PersonRepositoryCustomImpl implements PersonRepositoryCustom {
 
     @Override
     @Transactional
-    public Integer deleteAllNotOwningAnimal() {
+    public Integer deletePersonsWithoutAnimal() {
         TypedQuery<Person> typedQuery = em.createQuery("Select p from Person p", Person.class);
         List<Person> listPerson = typedQuery.getResultList();
         Integer compteurSuppression = 0;
         for(Person p: listPerson) {
-            if(p.getAnimals().isEmpty()) {
+            if(p.getAnimals() == null || p.getAnimals().isEmpty()) {
                 em.remove(p);
                 compteurSuppression++;
             }
@@ -31,7 +31,7 @@ public class PersonRepositoryCustomImpl implements PersonRepositoryCustom {
 
     @Override
     @Transactional
-    public Integer createEntities(Integer numberOfEntities) {
+    public Integer insertRandomPerson(Integer numberOfEntities) {
 
         String[] firstNames = {"Jean", "Franck", "Ernesto", "Timoté", "Matilda"};
         String[] lastNames = {"Carabit", "Oddet", "Mage", "Bellamy", "Renard"};
