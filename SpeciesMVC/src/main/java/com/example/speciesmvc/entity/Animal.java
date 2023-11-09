@@ -1,7 +1,11 @@
-package com.example.animals.model;
+package com.example.speciesmvc.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -12,27 +16,37 @@ public class Animal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(columnDefinition = "varchar(50)")
-    private String color;
-    @Column(columnDefinition = "varchar(50)")
+    @NotEmpty
     private String name;
+    @Column(columnDefinition = "varchar(50)")
+    private String color;
     @Column(columnDefinition = "varchar(255)")
+    @Size(max=255)
     private String sex;
-    @ManyToMany(mappedBy = "animals")
-    Set<Person> persons;
 
     @ManyToOne
     @JoinColumn(name="species_id")
+    @NotNull
     Species species;
-
+    @ManyToMany(mappedBy = "animals")
+    Set<Person> persons;
     @Override
     public String toString() {
         return "Animal{" +
                 "id=" + id +
-                ", color='" + color + '\'' +
                 ", name='" + name + '\'' +
+                ", color='" + color + '\'' +
                 ", sex='" + sex + '\'' +
                 ", species=" + species +
+                ", persons=" + persons +
                 '}';
+    }
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getColor() {
@@ -73,5 +87,18 @@ public class Animal {
 
     public void setSpecies(Species species) {
         this.species = species;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Animal animal = (Animal) o;
+        return Objects.equals(getId(), animal.getId()) && Objects.equals(getName(), animal.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName());
     }
 }

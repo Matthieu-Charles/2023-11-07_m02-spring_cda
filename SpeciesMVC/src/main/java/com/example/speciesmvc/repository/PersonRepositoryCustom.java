@@ -1,4 +1,4 @@
-package com.example.animals.repository;
+package com.example.speciesmvc.repository;
 
 public interface PersonRepositoryCustom {
 

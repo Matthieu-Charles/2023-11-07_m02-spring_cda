@@ -1,6 +1,6 @@
-package com.example.animals.repository;
+package com.example.speciesmvc.repository;
 
-import com.example.animals.model.Person;
+import com.example.speciesmvc.entity.Person;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;

@@ -1,13 +1,13 @@
-package com.example.animals;
+package com.example.speciesmvc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Tp04ApplicationTests {
+class SpeciesMvcApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+	}
 
 }

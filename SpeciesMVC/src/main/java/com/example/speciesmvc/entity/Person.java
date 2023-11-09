@@ -1,6 +1,10 @@
-package com.example.animals.model;
+package com.example.speciesmvc.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 import java.util.Set;
 
@@ -12,10 +16,16 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(columnDefinition = "varchar(50)")
+    @Min(0)
+    @Max(110)
     private Integer age;
     @Column(columnDefinition = "varchar(50)")
+    @NotEmpty
+    @Size(max = 50)
     private String firstname;
     @Column(columnDefinition = "varchar(50)")
+    @NotEmpty
+    @Size(max = 50)
     private String lastname;
     @ManyToMany
     @JoinTable(
@@ -24,6 +34,7 @@ public class Person {
             inverseJoinColumns = @JoinColumn(name="animals_id")
     )
     Set<Animal> animals;
+
 
     public Integer getId() {
         return id;
@@ -72,7 +83,6 @@ public class Person {
                 ", age=" + age +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
-                ", animals=" + animals +
                 '}';
     }
 }

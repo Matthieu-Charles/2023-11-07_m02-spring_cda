@@ -1,0 +1,41 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <meta charset="UTF-8">
+    <title>Création d'une espèce</title>
+</head>
+<body class="w-75 m-auto">
+<h1>Création d'une espèce</h1>
+<form class="w-50 m-auto" th:object="${species}" th:action="@{/species}" method="post">
+
+    <input type="hidden" th:field="*{id}"/>
+    <div class="form-group">
+        <label for="commonName">Nom</label>
+        <input type="text" class="form-control" id="commonName" th:field="*{commonName}">
+        <span th:if="${#fields.hasErrors('commonName')}" th:errors="*{commonName}">Error</span>
+    </div>
+
+    <div class="form-group">
+        <label for="latinName">Nom latin</label>
+        <input type="text" class="form-control" id="latinName" th:field="*{latinName}">
+        <span th:if="${#fields.hasErrors('latinName')}" th:errors="*{latinName}">Error</span>
+    </div>
+
+    <div class="form-group">Animaux de l'espèce :</div>
+    <div class="form-check" th:each="animal: ${animalsList}">
+        <input class="form-check-input" th:field="*{animals}" type="checkbox" th:value="${animal.getId()}" th:id="${animal.getId()}">
+        <label class="form-check-label" th:for="${animal.getId()}" th:text="${animal.getName()} + ' '"></label>
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Soumettre</button>
+    </div>
+
+</form>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

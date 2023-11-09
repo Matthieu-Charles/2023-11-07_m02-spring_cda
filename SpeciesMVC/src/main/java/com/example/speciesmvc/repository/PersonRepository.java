@@ -1,7 +1,7 @@
-package com.example.animals.repository;
+package com.example.speciesmvc.repository;
 
-import com.example.animals.model.Animal;
-import com.example.animals.model.Person;
+import com.example.speciesmvc.entity.Animal;
+import com.example.speciesmvc.entity.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
