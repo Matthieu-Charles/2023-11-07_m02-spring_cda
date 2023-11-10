@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface PersonRepository extends JpaRepository<Person, Integer> {
+public interface PersonRepository extends JpaRepository<Person, Integer>, PersonRepositoryCustom {
     @Query("select p from Person p where p.age between :min and :max")
     List<Person> findAllAgeBetweenMinAndMax(Integer min, Integer max);
     @Query("select p from Person p where :animal MEMBER OF p.animals")

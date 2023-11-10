@@ -2,7 +2,6 @@ package com.example.speciesmvc.controller;
 
 import com.example.speciesmvc.entity.Animal;
 import com.example.speciesmvc.entity.Person;
-import com.example.speciesmvc.entity.Species;
 import com.example.speciesmvc.repository.AnimalRepository;
 import com.example.speciesmvc.repository.PersonRepository;
 import com.example.speciesmvc.repository.SpeciesRepository;
@@ -79,4 +78,15 @@ public class PersonController {
         });
         return "redirect:/person";
     }
+    @GetMapping("/person/random")
+    public String generateRandom() {
+        personRepository.insertRandomPerson(10);
+        return "redirect:/person";
+    }
+    @GetMapping("/person/deleteNoAnimals")
+    public String deletePersonsWithoutAnimal() {
+        personRepository.deletePersonsWithoutAnimal();
+        return "redirect:/person";
+    }
+
 }
