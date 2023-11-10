@@ -2,13 +2,16 @@ package com.example.speciesmvc.controller;
 
 import com.example.speciesmvc.entity.Animal;
 import com.example.speciesmvc.entity.Person;
+import com.example.speciesmvc.entity.Species;
 import com.example.speciesmvc.repository.AnimalRepository;
 import com.example.speciesmvc.repository.PersonRepository;
 import com.example.speciesmvc.repository.SpeciesRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +35,6 @@ public class PersonController {
         model.addAttribute("persons", persons);
         return "person/list_person";
     }
-
     @GetMapping("/person/{id}")
     public String getOneSpecie(@PathVariable Integer id, Model model) {
         Optional<Person> person = personRepository.findById(id);
@@ -50,16 +52,19 @@ public class PersonController {
         model.addAttribute("animalsList", animalRepository.findAll(Sort.by(Sort.Direction.ASC, "name")));
         return "person/create_person";
     }
-
     @PostMapping("/person")
-    public String createOrUpdate(Person person) {
-        System.out.println(person);
-        List<Animal> listAnimalEnBase = this.animalRepository.findAll();
-        for (Animal a : listAnimalEnBase) {
-            if(person.getAnimals().contains(a)){
-                a.getPersons().add(person);
-            } else {
-                a.getPersons().remove(person);
+    public String createOrUpdate(@Valid Person person, BindingResult result) {
+        if(result.hasErrors()) {
+            return "/person/create_person";
+        }
+        if(person.getAnimals() != null) {
+            List<Animal> listAnimalEnBase = this.animalRepository.findAll();
+            for (Animal a : listAnimalEnBase) {
+                if(person.getAnimals().contains(a)){
+                    a.getPersons().add(person);
+                } else {
+                    a.getPersons().remove(person);
+                }
             }
         }
         this.personRepository.save(person);

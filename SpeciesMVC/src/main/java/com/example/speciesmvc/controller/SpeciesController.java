@@ -69,8 +69,10 @@ public class SpeciesController {
     public String delete(@PathVariable("id") Integer speciesId) {
         Optional<Species> optionalSpeciesToDelete = this.speciesRepository.findById(speciesId);
         optionalSpeciesToDelete.ifPresent(species -> {
-            for(Animal a : species.getAnimals()) a.setSpecies(null);
-            this.speciesRepository.delete(species);
+            if (animalRepository.findBySpecies(species).isEmpty()) {
+                for(Animal a : species.getAnimals()) a.setSpecies(null);
+                this.speciesRepository.delete(species);
+            }
         });
         return "redirect:/species";
     }

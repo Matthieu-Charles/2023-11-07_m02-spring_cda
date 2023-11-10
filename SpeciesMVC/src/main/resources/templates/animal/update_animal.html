@@ -6,6 +6,23 @@
     <title>Mise à jour d'un animal</title>
 </head>
 <body class="w-75 m-auto">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/animal">Animal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/species">Species</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/person">Person</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <h1>Mise à jour d'un animal</h1>
 <form class="w-50 m-auto" th:object="${animal}" th:action="@{/animal}" method="post">
 
