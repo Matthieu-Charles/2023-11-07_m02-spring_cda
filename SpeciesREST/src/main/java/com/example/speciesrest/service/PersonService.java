@@ -1,12 +1,15 @@
 package com.example.speciesrest.service;
 
-import com.example.speciesrest.PersonNotFoundException;
-import com.example.speciesrest.DTO.PersonDTO;
+import com.example.speciesrest.dto.PersonDto;
 import com.example.speciesrest.entity.Animal;
 import com.example.speciesrest.entity.Person;
+import com.example.speciesrest.exception.EntityToCreateHasAnIdException;
+import com.example.speciesrest.exception.EntityToCreateHasNoIdException;
+import com.example.speciesrest.mapper.PersonMapper;
 import com.example.speciesrest.repository.AnimalRepository;
 import com.example.speciesrest.repository.PersonRepository;
 import com.example.speciesrest.repository.SpeciesRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,15 +28,16 @@ public class PersonService {
     AnimalRepository animalRepository;
     @Autowired
     SpeciesRepository speciesRepository;
+    @Autowired
+    PersonMapper personMapper;
 
-    public Person create(@Valid PersonDTO personDTO) {
-        Person personToSave = new Person();
-        personToSave.setAge(personDTO.getAge());
-        personToSave.setFirstname(personDTO.getFirstname());
-        personToSave.setLastname(personDTO.getLastname());
+    public Person create(@Valid PersonDto personDTO) {
+        if (personDTO.getId() != null) throw new EntityToCreateHasAnIdException("La personne à créer a déjà un id");
+        Person personToSave = personMapper.toPerson(personDTO);
         return this.personRepository.save(personToSave);
     }
-    public Person update(@Valid PersonDTO personDTO) throws PersonNotFoundException {
+    public Person update(@Valid PersonDto personDTO) {
+        if (personDTO.getId() == null) throw new EntityToCreateHasNoIdException("La personne à créer a déjà un id");
         Optional<Person> person = this.personRepository.findById(personDTO.getId());
         if(person.isPresent()) {
             Person person1 = person.get();
@@ -45,27 +49,32 @@ public class PersonService {
                     a.getPersons().remove(person1);
                 }
             }
-            person1.setLastname(personDTO.getLastname());
-            person1.setFirstname(personDTO.getFirstname());
-            person1.setAge(personDTO.getAge());
+            Person personMapped = personMapper.toPerson(personDTO);
+            person1.setLastname(personMapped.getLastname());
+            person1.setFirstname(personMapped.getFirstname());
+            person1.setAge(personMapped.getAge());
             return this.personRepository.save(person1);
         } else {
-            throw new PersonNotFoundException("Il n'existe pas d'person avec cet id");
+            throw new EntityNotFoundException("personne avec l'id " + personDTO.getId() + " non trouvé");
         }
     }
 
     public void delete(Integer id) {
         Optional<Person> optionalPersonToDelete = this.personRepository.findById(id);
-        optionalPersonToDelete.ifPresent(person -> {
-            for(Animal a : person.getAnimals()) a.getPersons().remove(person);
-            this.personRepository.delete(person);
-        });
+        optionalPersonToDelete.ifPresentOrElse(person -> {
+                    for(Animal a : person.getAnimals()) a.getPersons().remove(person);
+                    this.personRepository.delete(person);
+                },
+                () -> {
+                    throw new EntityNotFoundException("personne avec l'id " + id + " non trouvé");
+                }
+        );
     }
     public Page<Person> findAll(Pageable pageable) {
         return this.personRepository.findAll(pageable);
     }
-    public Person findById(Integer id) throws PersonNotFoundException {
-        return this.personRepository.findById(id).orElseThrow(() -> new PersonNotFoundException("person avec l'id " + id + " non trouvé"));
+    public Person findById(Integer id) {
+        return this.personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("personne avec l'id " + id + " non trouvé"));
     }
 
 }

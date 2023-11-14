@@ -2,6 +2,7 @@ package com.example.speciesrest.repository;
 
 import com.example.speciesrest.entity.Animal;
 import com.example.speciesrest.entity.Species;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -17,4 +18,6 @@ public interface AnimalRepository extends JpaRepository<Animal, Integer> {
     Boolean isOwned(Animal animal);
 
     List<Animal> findBySpecies(Species species);
+
+    Animal findByName(@NotEmpty String name);
 }

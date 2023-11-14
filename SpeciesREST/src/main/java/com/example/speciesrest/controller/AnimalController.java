@@ -1,14 +1,13 @@
 package com.example.speciesrest.controller;
 
-import com.example.speciesrest.AnimalNotFoundException;
-import com.example.speciesrest.DTO.AnimalDTO;
+import com.example.speciesrest.dto.AnimalDto;
 import com.example.speciesrest.entity.Animal;
+import com.example.speciesrest.mapper.AnimalMapper;
 import com.example.speciesrest.service.AnimalService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,27 +16,33 @@ public class AnimalController {
 
     @Autowired
     private AnimalService animalService;
-    @GetMapping("")
-    public Page<Animal> findAll() {
-        return this.animalService.findAll(PageRequest.of(0, 3, Sort.by("name")));
-    }
+    @Autowired
+    private AnimalMapper animalMapper;
+
     @GetMapping("/{id}")
-    public Animal findById(@PathVariable("id") Integer id) throws AnimalNotFoundException {
-        return this.animalService.findById(id);
+    public AnimalDto findById(@PathVariable("id") Integer id) {
+        return animalMapper.toDto(this.animalService.findById(id));
     }
     @PostMapping("/create")
-    public Animal create(@RequestBody @Valid AnimalDTO animalDTO) {
-        return this.animalService.create(animalDTO);
+    public AnimalDto create(@RequestBody @Valid AnimalDto animalDTO) {
+        return animalMapper.toDto(this.animalService.create(animalDTO));
     }
     @PutMapping("/update")
-    public Animal update(@RequestBody @Valid AnimalDTO animalDTO) throws AnimalNotFoundException {
-        return this.animalService.update(animalDTO);
+    public AnimalDto update(@RequestBody @Valid AnimalDto animalDTO) {
+        return animalMapper.toDto(this.animalService.update(animalDTO));
     }
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Integer id) {
         this.animalService.delete(id);
     }
 
+    @GetMapping("")
+    public Page<Animal> findPage(
+            @RequestParam(value= "pageNumber", defaultValue = "0") Integer pageNumber,
+            @RequestParam(value= "pageSize", defaultValue = "20") Integer pageSize
+    ) {
+        return animalService.findAll(PageRequest.of(pageNumber, pageSize));
+    }
     public void getTest() {}
 
 }

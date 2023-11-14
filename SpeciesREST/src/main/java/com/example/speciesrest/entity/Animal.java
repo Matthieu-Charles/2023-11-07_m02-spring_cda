@@ -5,10 +5,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
 import java.util.Objects;
 import java.util.Set;
 
+@Getter
 @Entity
 @Table(name = "animal")
 @JsonIgnoreProperties({ "species", "persons" })
@@ -44,48 +46,25 @@ public class Animal {
                 ", persons=" + persons +
                 '}';
     }
-    public Integer getId() {
-        return id;
-    }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getColor() {
-        return color;
     }
 
     public void setColor(String color) {
         this.color = color;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSex() {
-        return sex;
     }
 
     public void setSex(String sex) {
         this.sex = sex;
     }
 
-    public Set<Person> getPersons() {
-        return persons;
-    }
-
     public void setPersons(Set<Person> persons) {
         this.persons = persons;
-    }
-
-    public Species getSpecies() {
-        return species;
     }
 
     public void setSpecies(Species species) {

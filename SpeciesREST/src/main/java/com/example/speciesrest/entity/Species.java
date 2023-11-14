@@ -3,9 +3,11 @@ package com.example.speciesrest.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
 import java.util.Set;
 
+@Getter
 @Entity
 @Table(name = "species")
 public class Species {
@@ -32,32 +34,16 @@ public class Species {
                 '}';
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getCommonName() {
-        return commonName;
     }
 
     public void setCommonName(String commonName) {
         this.commonName = commonName;
     }
 
-    public String getLatinName() {
-        return latinName;
-    }
-
     public void setLatinName(String latinName) {
         this.latinName = latinName;
-    }
-
-    public Set<Animal> getAnimals() {
-        return animals;
     }
 
     public void setAnimals(Set<Animal> animals) {

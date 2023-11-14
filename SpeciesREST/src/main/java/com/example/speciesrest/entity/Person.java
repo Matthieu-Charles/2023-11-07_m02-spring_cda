@@ -5,9 +5,11 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
 import java.util.Set;
 
+@Getter
 @Entity
 @Table(name = "person")
 public class Person {
@@ -35,40 +37,20 @@ public class Person {
     Set<Animal> animals;
 
 
-    public Integer getId() {
-        return id;
-    }
-
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getAge() {
-        return age;
     }
 
     public void setAge(Integer age) {
         this.age = age;
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
-
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
 
-    public String getLastname() {
-        return lastname;
-    }
-
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }
-
-    public Set<Animal> getAnimals() {
-        return animals;
     }
 
     public void setAnimals(Set<Animal> animals) {

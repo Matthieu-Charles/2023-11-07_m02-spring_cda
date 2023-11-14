@@ -1,13 +1,16 @@
 package com.example.speciesrest.service;
 
-import com.example.speciesrest.AnimalNotFoundException;
-import com.example.speciesrest.DTO.AnimalDTO;
+import com.example.speciesrest.dto.AnimalDto;
 import com.example.speciesrest.entity.Animal;
 import com.example.speciesrest.entity.Person;
 import com.example.speciesrest.entity.Species;
+import com.example.speciesrest.exception.EntityToCreateHasAnIdException;
+import com.example.speciesrest.exception.EntityToCreateHasNoIdException;
+import com.example.speciesrest.mapper.AnimalMapper;
 import com.example.speciesrest.repository.AnimalRepository;
 import com.example.speciesrest.repository.PersonRepository;
 import com.example.speciesrest.repository.SpeciesRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,52 +29,66 @@ public class AnimalService {
     PersonRepository personRepository;
     @Autowired
     SpeciesRepository speciesRepository;
+    @Autowired
+    AnimalMapper animalMapper;
 
-    public Animal create(@Valid AnimalDTO animalDTO) {
+    public Animal create(@Valid AnimalDto animalDTO) {
+        if (animalDTO.getId() != null) throw new EntityToCreateHasAnIdException("L'animal à créer a déjà un id");
         Animal animalToSave = new Animal();
         animalToSave.setName(animalDTO.getName());
         animalToSave.setColor(animalDTO.getColor());
-        Optional<Species> species = speciesRepository.findById(animalDTO.getSpecies());
-        species.ifPresent(animalToSave::setSpecies);
-        System.out.println(species);
+        Optional<Species> species = speciesRepository.findByCommonName(animalDTO.getSpecies());
+        species.ifPresentOrElse(
+                animalToSave::setSpecies,
+                () -> {
+                    throw new RuntimeException("species non présente");
+                }
+        );
         animalToSave.setSex(animalDTO.getSex());
         return this.animalRepository.save(animalToSave);
     }
-    public Animal update(@Valid AnimalDTO animalDTO) throws AnimalNotFoundException {
+    public Animal update(@Valid AnimalDto animalDTO) {
+        if (animalDTO.getId() == null) throw new EntityToCreateHasNoIdException("L'animal à mettre à jour n'a pas d'id");
         Optional<Animal> animal = this.animalRepository.findById(animalDTO.getId());
         if(animal.isPresent()) {
             Animal animal1 = animal.get();
             List<Person> listPersonEnBase = this.personRepository.findAll();
+            Animal animal2 = animalMapper.toAnimal(animalDTO);
+            System.out.println(animal2.getPersons());
             for (Person p : listPersonEnBase) {
-                if(animalDTO.getPersons().contains(p)){
+                if(animal2.getPersons().contains(p)){
                     p.getAnimals().add(animal1);
                 } else {
                     p.getAnimals().remove(animal1);
                 }
             }
-            animal1.setName(animalDTO.getName());
-            animal1.setColor(animalDTO.getColor());
-            animal1.setSex(animalDTO.getSex());
-            Optional<Species> species = speciesRepository.findById(animalDTO.getSpecies());
+            animal1.setName(animal2.getName());
+            animal1.setColor(animal2.getColor());
+            animal1.setSex(animal2.getSex());
+            Optional<Species> species = speciesRepository.findById(animal2.getSpecies().getId());
             species.ifPresent(animal1::setSpecies);
-            animal1.setSex(animalDTO.getSex());
+            animal1.setSex(animal2.getSex());
             return this.animalRepository.save(animal1);
         } else {
-            throw new AnimalNotFoundException("Il n'existe pas d'animal avec cet id");
+            throw new EntityNotFoundException("animal avec l'id " + animalDTO.getId() + " non trouvé");
         }
     }
     public void delete(Integer id) {
         Optional<Animal> optionalAnimalToDelete = this.animalRepository.findById(id);
-        optionalAnimalToDelete.ifPresent(animal -> {
+        optionalAnimalToDelete.ifPresentOrElse(animal -> {
             for(Person p : animal.getPersons()) p.getAnimals().remove(animal);
             this.animalRepository.delete(animal);
-        });
+            },
+            () -> {
+            throw new EntityNotFoundException("animal avec l'id " + id + " non trouvé");
+            }
+        );
     }
     public Page<Animal> findAll(Pageable pageable) {
         return this.animalRepository.findAll(pageable);
     }
-    public Animal findById(Integer id) throws AnimalNotFoundException {
-        return this.animalRepository.findById(id).orElseThrow(() -> new AnimalNotFoundException("animal avec l'id " + id + " non trouvé"));
+    public Animal findById(Integer id) {
+        return this.animalRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("animal avec l'id " + id + " non trouvé"));
     }
 
 }

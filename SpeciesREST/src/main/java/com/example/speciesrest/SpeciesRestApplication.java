@@ -35,11 +35,11 @@ public class SpeciesRestApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		System.out.println("dans run");
-		this.animalController.getTest();
-
-//		this.animalService.create(null);
-		this.animalService.findById(2);
+//		System.out.println("dans run");
+//		this.animalController.getTest();
+//
+////		this.animalService.create(null);
+//		this.animalService.findById(2);
 	}
 
 }

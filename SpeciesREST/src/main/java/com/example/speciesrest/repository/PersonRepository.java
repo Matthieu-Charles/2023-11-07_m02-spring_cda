@@ -12,4 +12,5 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, Person
     List<Person> findAllAgeBetweenMinAndMax(Integer min, Integer max);
     @Query("select p from Person p where :animal MEMBER OF p.animals")
     List<Person> findOwnerByAnimal(Animal animal);
+    Person findByLastname(String a);
 }

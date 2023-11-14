@@ -5,10 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SpeciesRepository extends JpaRepository<Species, Integer> {
     @Query("select s from Species s order by s.commonName ASC")
     List<Species> findAllOrderByCommonNameAsc();
     @Query("select s from Species s where s.commonName like CONCAT('%',:commonName,'%')")
     List<Species> findSpeciesWithCommonNameLike(String commonName);
+
+    Optional<Species> findByCommonName(String species);
 }
